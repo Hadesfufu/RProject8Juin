@@ -6,23 +6,24 @@ function(input, output) {
       if (is.null(inFile))
         return(NULL)
     
-      filedata <- read.csv(inFile$datapath, header=input$header, sep=input$sep,
+      filedata <- read.csv(inFile$datapath, header=input$header, sep=input$sep, 
              quote=input$quote)
-      firstCol <- as.numeric(filedata[,1])
-      lastCol <- as.numeric(filedata[,2])
+      firstRow <- as.numeric(filedata[,1])
+      lastRow <- as.numeric(filedata[,2])
       if(input$func == 'varcomp'){
-        varfc <- var(firstCol)
-        varlc <- var(lastCol)
-        outputdata <- data.frame(c(varfc), c(varlc))
+        varfr <- var(firstRow)
+        varlr <- var(lastRow)
+        vart <- var.test(firstRow, lastRow)
+        outputdata <- data.frame(c(varfr), c(varlr), c(vart))
       }
       else if(input$func == 'moycomp'){
-        moyfc <- mean(firstCol)
-        moylc <- mean(lastCol)
-        outputdata <- t.test(firstCol, lastCol)
-        outputdata <- data.frame(c(moyfc), c(moylc))
+        moyfr <- mean(firstRow)
+        moylr <- mean(lastRow)
+        moyt <- t.test(firstRow,lastRow)
+        outputdata <- data.frame(c(moyfr), c(moylr), c(moyt))
       }
       else{
-        outputdata <- filedata 
+        outputdata <- data.frame(c(firstRow), c(lastRow)) 
       }
       outputdata
   })
